@@ -1,137 +1,119 @@
-<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'POS') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+<head>
+    <base href="../../" />
+    <title>Saul Theme by Keenthemes</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="Saul HTML Free - Bootstrap 5 HTML Multipurpose Admin Dashboard Theme" />
+    <meta name="keywords"
+        content="Saul, bootstrap, bootstrap 5, dmin themes, free admin themes, bootstrap admin, bootstrap dashboard" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Saul HTML Free - Bootstrap 5 HTML Multipurpose Admin Dashboard Theme" />
+    <meta property="og:url" content="https://keenthemes.com/products/saul-html-pro" />
+    <meta property="og:site_name" content="Keenthemes | Saul HTML Free" />
+    <link rel="canonical" href="https://preview.keenthemes.com/saul-html-free" />
+    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+</head>
 
-                    </ul>
+<body id="kt_body" class="app-blank">
+    <div class="d-flex flex-column flex-root" id="kt_app_root">
+        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+            <div class="d-flex flex-column flex-lg-row-fluid py-10">
+                <div class="d-flex flex-center flex-column flex-column-fluid">
+                    <div class="card shadow w-lg-500px p-10 p-lg-15 mx-auto">
+                        <form class="form w-100" method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="text-center mb-10">
+                                <h1 class="text-dark mb-3">Sign In</h1>
+                            </div>
+                            <div class="fv-row mb-10">
+                                <label class="form-label fs-6 fw-bold text-dark">Email</label>
+                                <input class="form-control form-control-lg form-control-solid  @error('password') is-invalid @enderror" type="email"
+                                    name="email" required />
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="fv-row mb-10">
+                                <div class="d-flex flex-stack mb-2">
+                                    <label class="form-label fw-bold text-dark fs-6 mb-0">Password</label>
                                 </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                                <input class="form-control form-control-lg form-control-solid  @error('password') is-invalid @enderror" type="password"
+                                    name="password" required />
 
-        <main class="py-4">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">{{ __('Login') }}</div>
-        
-                        <div class="card-body">
-                            <form method="POST" action="{{ route('login') }}">
-                                @csrf
-        
-                                <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-        
-                                    <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-        
-                                        @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-        
-                                <div class="row mb-3">
-                                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-        
-                                    <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-        
-                                        @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-        
-                                <div class="row mb-3">
-                                    <div class="col-md-6 offset-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-        
-                                            <label class="form-check-label" for="remember">
-                                                {{ __('Remember Me') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-        
-                                <div class="row mb-0">
-                                    <div class="col-md-8 offset-md-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            {{ __('Login') }}
-                                        </button>
-        
-                                        @if (Route::has('password.request'))
-                                            <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                {{ __('Forgot Your Password?') }}
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">
+                                    <span class="indicator-label">Login</span>
+                                    <span class="indicator-progress">Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+        </div>
+        <script>
+            var hostUrl = "assets/";
+        </script>
+        <script src="assets/plugins/global/plugins.bundle.js"></script>
+        <script src="assets/js/scripts.bundle.js"></script>
+        <script src="assets/js/custom/authentication/sign-in/general.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const form = document.querySelector("form");
+                const submitButton = form.querySelector("button[type='submit']");
+                const originalText = submitButton.innerHTML;
+
+                form.addEventListener("submit", function() {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML =
+                        `<span class="spinner-border spinner-border-sm align-middle me-2"></span> Please wait...`;
+                });
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @if (session('success') || session('error'))
+            <script>
+                $(document).ready(function() {
+                    var successMessage = "{{ session('success') }}";
+                    var errorMessage = "{{ session('error') }}";
+
+                    if (successMessage) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: successMessage,
+                        });
+                    }
+
+                    if (errorMessage) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errorMessage,
+                        });
+                    }
+                });
+            </script>
+        @endif
+</body>
+
 </html>

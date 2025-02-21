@@ -1,39 +1,49 @@
 @extends('layouts.app')
 
+@section('title', 'Data Koperasi')
+@section('breadcrumb', 'Koperasi')
 @section('content')
-<div class="container">
-    <h2 class="mb-4">Daftar Koperasi</h2>
-    <a href="{{ route('koperasi.create') }}" class="btn btn-primary mb-3">Tambah Koperasi</a>
-    
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <div class="card mb-5 mb-xl-8">
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Alamat</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($koperasis as $key => $koperasi)
-            <tr>
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $koperasi->nama }}</td>
-                <td>{{ $koperasi->alamat }}</td>
-                <td>
-                    <a href="{{ route('koperasi.edit', $koperasi->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('koperasi.destroy', $koperasi->id) }}" method="POST" style="display:inline;">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus Koperasi?')">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+        <div class="card-header border-0 pt-5">
+            @if (!Auth::user()->isOwner())
+                <div class="card-toolbar">
+                    <a href="{{ route('koperasi.create') }}" class="btn btn-sm fw-bold btn-primary">Tambah
+                        Koperasi</a>
+                </div>
+            @endif
+        </div>
+        <div class="card-body pt-3">
+
+            <table class="table table-hover table-row-bordered table-row-gray-100 align-middle gs-7 gy-5" id="datatable">
+                <thead>
+                    <tr class="fw-bold fs-6 text-gray-800 bg-light-dark">
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($koperasis as $key => $koperasi)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $koperasi->nama }}</td>
+                            <td>{{ $koperasi->alamat }}</td>
+                            <td>
+                                <a href="{{ route('koperasi.edit', $koperasi->id) }}"
+                                    class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('koperasi.destroy', $koperasi->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Hapus Koperasi?')">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection

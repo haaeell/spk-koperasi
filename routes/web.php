@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\HasilController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KoperasiController;
+use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\PenilaianController;
-
+use App\Http\Controllers\PerhitunganController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\SubKriteriaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,8 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('koperasi', KoperasiController::class);
-Route::get('penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
-Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
-Route::get('/penilaian/proses', [PenilaianController::class, 'proses'])->name('penilaian.proses');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('koperasi', KoperasiController::class);
+    Route::resource('kriteria', KriteriaController::class);
+    Route::resource('sub-kriteria', SubKriteriaController::class);
+    Route::get('penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
+    Route::get('perhotungan', [PerhitunganController::class, 'index'])->name('perhitungan.index');
+    Route::get('hasil', [HasilController::class, 'index'])->name('hasil.index');
+    Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+    Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
+    Route::get('/penilaian/proses', [PenilaianController::class, 'proses'])->name('penilaian.proses');
+});

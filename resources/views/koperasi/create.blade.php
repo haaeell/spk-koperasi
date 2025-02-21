@@ -1,21 +1,24 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Koperasi')
 @section('content')
-<div class="container">
-    <h2>Tambah Koperasi</h2>
-    
-    <form action="{{ route('koperasi.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label>Nama Koperasi</label>
-            <input type="text" name="nama" class="form-control" required>
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ route('koperasi.store') }}" method="POST">
+                @csrf
+                <div class="mb-5">
+                    <label>Nama Koperasi</label>
+                    <input type="text" name="nama" class="form-control" required>
+                </div>
+                <div class="mb-5">
+                    <label>Alamat</label>
+                    <input type="text" name="alamat" class="form-control" required>
+                </div>
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a href="{{ route('koperasi.index') }}" class="btn btn-secondary">Kembali</a>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label>Alamat</label>
-            <input type="text" name="alamat" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Simpan</button>
-        <a href="{{ route('koperasi.index') }}" class="btn btn-secondary">Batal</a>
-    </form>
-</div>
+    </div>
 @endsection

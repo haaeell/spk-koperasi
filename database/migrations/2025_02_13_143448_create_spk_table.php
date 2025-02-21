@@ -23,10 +23,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('sub_kriteria', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kriteria_id')->constrained('kriteria')->onDelete('cascade');
+            $table->string('nama');
+            $table->decimal('bobot', 5, 2);
+            $table->timestamps();
+        });
+
         Schema::create('alternatif', function (Blueprint $table) {
             $table->id();
             $table->foreignId('koperasi_id')->constrained('koperasi')->onDelete('cascade');
             $table->foreignId('kriteria_id')->constrained('kriteria')->onDelete('cascade');
+            $table->foreignId('sub_kriteria_id')->constrained('sub_kriteria')->onDelete('cascade');
             $table->decimal('nilai', 8, 2);
             $table->timestamps();
         });
@@ -38,5 +47,6 @@ return new class extends Migration
         Schema::dropIfExists('koperasi');
         Schema::dropIfExists('kriteria');
         Schema::dropIfExists('alternatif');
+        Schema::dropIfExists('sub_kriteria');
     }
 };

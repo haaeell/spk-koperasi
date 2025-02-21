@@ -17,4 +17,13 @@ class Kriteria extends Model
         return $this->hasMany(Alternatif::class);
     }
 
+    public function subKriterias()
+    {
+        return $this->hasMany(SubKriteria::class);
+    }
+    public function subKriteria()
+    {
+        return $this->hasMany(SubKriteria::class);
+    }
+
 }
