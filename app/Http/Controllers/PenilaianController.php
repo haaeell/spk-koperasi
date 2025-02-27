@@ -29,10 +29,14 @@ class PenilaianController extends Controller
 
         foreach ($validatedData['nilai'] as $koperasiId => $subKriteriaData) {
             foreach ($subKriteriaData as $subKriteriaId => $nilai) {
+                $subKriteria = SubKriteria::find($subKriteriaId);
+                $kriteriaId = $subKriteria->kriteria_id;
+
                 Alternatif::updateOrCreate(
                     [
                         'koperasi_id' => $koperasiId,
                         'sub_kriteria_id' => $subKriteriaId,
+                        'kriteria_id' => $kriteriaId,
                     ],
                     [
                         'nilai' => $nilai,
@@ -43,6 +47,7 @@ class PenilaianController extends Controller
 
         return redirect()->route('penilaian.proses')->with('success', 'Data penilaian berhasil disimpan.');
     }
+
 
     public function proses()
     {
@@ -59,6 +64,8 @@ class PenilaianController extends Controller
                     ->where('sub_kriteria_id', $subKriteria->id)
                     ->first()
                     ->nilai ?? 0;
+
+                $kriteriaId = $subKriteria->kriteria_id;
 
                 if ($subKriteria->jenis == 'benefit') {
                     $max = Alternatif::where('sub_kriteria_id', $subKriteria->id)->max('nilai');

@@ -8,7 +8,7 @@
         <div class="card-header border-0 pt-5">
             @if (!Auth::user()->isOwner())
                 <div class="card-toolbar">
-                    <a href="{{ route('kriteria.create') }}" class="btn btn-sm fw-bold btn-primary">Tambah
+                    <a href="{{ route('sub-kriteria.create') }}" class="btn btn-sm fw-bold btn-primary">Tambah
                         Sub kriteria</a>
                 </div>
             @endif

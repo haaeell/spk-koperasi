@@ -16,7 +16,8 @@ class SubKriteriaController extends Controller
 
     public function create()
     {
-        return view('sub-kriteria.create');
+        $kriteria = Kriteria::all();
+        return view('sub-kriteria.create', compact('kriteria'));
     }
 
     public function store(Request $request)
@@ -34,7 +35,8 @@ class SubKriteriaController extends Controller
     public function edit($id)
     {
         $subKriteria = SubKriteria::findOrFail($id);
-        return view('sub-kriteria.edit', compact('subKriteria'));
+        $kriteria = Kriteria::all();
+        return view('sub-kriteria.edit', compact('subKriteria', 'kriteria'));
     }
 
     public function update(Request $request, Kriteria $kriteria)
@@ -49,8 +51,9 @@ class SubKriteriaController extends Controller
         return redirect()->route('sub-kriteria.index')->with('success', 'Sub Kriteria berhasil diperbarui.');
     }
 
-    public function destroy(SubKriteria $subKriteria)
+    public function destroy($id)
     {
+        $subKriteria = SubKriteria::findOrFail($id);
         $subKriteria->delete();
         return redirect()->route('sub-kriteria.index')->with('success', 'Sub Kriteria berhasil dihapus.');
     }

@@ -10,7 +10,7 @@ class Alternatif extends Model
     use HasFactory;
 
     protected $table = 'alternatif';
-    protected $fillable = ['koperasi_id', 'kriteria_id', 'nilai'];
+    protected $fillable = ['koperasi_id', 'sub_kriteria_id','kriteria_id', 'nilai'];
 
     public function koperasi()
     {
@@ -20,5 +20,10 @@ class Alternatif extends Model
     public function kriteria()
     {
         return $this->belongsTo(Kriteria::class);
+    }
+
+    public function subKriteria()
+    {
+        return $this->belongsTo(SubKriteria::class);
     }
 }

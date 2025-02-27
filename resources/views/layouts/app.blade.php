@@ -192,7 +192,7 @@
                         <div id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false"
                             class="flex-column-fluid menu menu-sub-indention menu-column menu-rounded menu-active-bg mb-7">
                             <div class="menu-item menu-accordion">
-                                <span class="menu-link">
+                                <a href="/home" class="menu-link {{ request()->routeIs('home') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-element-3 fs-1">
                                             <span class="path1"></span>
@@ -200,7 +200,7 @@
                                         </i>
                                     </span>
                                     <span class="menu-title">Dashboards</span>
-                                </span>
+                                </a>
                             </div>
 
                             <div class="separator my-2"></div>
