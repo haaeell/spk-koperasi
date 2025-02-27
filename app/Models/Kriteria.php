@@ -10,7 +10,7 @@ class Kriteria extends Model
     use HasFactory;
 
     protected $table = 'kriteria';
-    protected $fillable = ['nama', 'bobot', 'jenis'];
+    protected $fillable = ['nama', 'bobot', 'jenis', 'kode'];
 
     public function alternatif()
     {

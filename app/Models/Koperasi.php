@@ -10,7 +10,7 @@ class Koperasi extends Model
     use HasFactory;
 
     protected $table = 'koperasi';
-    protected $fillable = ['nama', 'alamat'];
+    protected $fillable = ['nama', 'alamat', 'kode'];
 
     public function alternatif()
     {

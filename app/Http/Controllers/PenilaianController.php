@@ -6,7 +6,9 @@ use App\Models\Koperasi;
 use App\Models\Kriteria;
 use App\Models\SubKriteria;
 use App\Models\Alternatif;
+use App\Models\RiwayatPerhitungan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PenilaianController extends Controller
 {
@@ -14,85 +16,143 @@ class PenilaianController extends Controller
     {
         $koperasis = Koperasi::orderBy('nama', 'asc')->get();
         $kriterias = Kriteria::with('subKriteria')->get();
-        $nilaiAlternatif = Alternatif::all()->keyBy(function ($item) {
-            return $item->koperasi_id . '-' . $item->sub_kriteria_id;
-        });
+        $nilaiAlternatif = Alternatif::all()->keyBy(fn($item) => $item->koperasi_id . '-' . $item->sub_kriteria_id);
 
         return view('penilaian.index', compact('koperasis', 'kriterias', 'nilaiAlternatif'));
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'nilai' => 'required|array',
-        ]);
-
-        foreach ($validatedData['nilai'] as $koperasiId => $subKriteriaData) {
-            foreach ($subKriteriaData as $subKriteriaId => $nilai) {
-                $subKriteria = SubKriteria::find($subKriteriaId);
-                $kriteriaId = $subKriteria->kriteria_id;
+        foreach ($request->nilai as $koperasiId => $subKriteriaArray) {
+            foreach ($subKriteriaArray as $subKriteriaId => $nilai) {
+                $subKriteria = SubKriteria::findOrFail($subKriteriaId);
 
                 Alternatif::updateOrCreate(
-                    [
-                        'koperasi_id' => $koperasiId,
-                        'sub_kriteria_id' => $subKriteriaId,
-                        'kriteria_id' => $kriteriaId,
-                    ],
-                    [
-                        'nilai' => $nilai,
-                    ]
+                    ['koperasi_id' => $koperasiId, 'kriteria_id' => $subKriteria->kriteria_id, 'sub_kriteria_id' => $subKriteriaId],
+                    ['nilai' => $nilai]
                 );
             }
         }
 
-        return redirect()->route('penilaian.proses')->with('success', 'Data penilaian berhasil disimpan.');
+        return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil disimpan.');
     }
 
-
-    public function proses()
+    private function hitungPerhitungan()
     {
         $koperasis = Koperasi::all();
         $kriterias = Kriteria::with('subKriteria')->get();
-        $subKriterias = SubKriteria::all();
+        $alternatif = Alternatif::all();
 
-        $alternatifs = Alternatif::all();
+        $cmin = [];
+        $cmax = [];
+        foreach ($kriterias as $kriteria) {
+            foreach ($kriteria->subKriteria as $sub) {
+                $nilaiSub = $alternatif->where('sub_kriteria_id', $sub->id)->pluck('nilai');
+                $cmin[$sub->id] = $nilaiSub->min();
+                $cmax[$sub->id] = $nilaiSub->max();
+            }
+        }
 
-        $normalisasi = [];
+        $utility = [];
+        foreach ($alternatif as $alt) {
+            $cMin = $cmin[$alt->sub_kriteria_id];
+            $cMax = $cmax[$alt->sub_kriteria_id];
+            $utility[$alt->koperasi_id][$alt->sub_kriteria_id] = ($cMax - $cMin) != 0 ? ($alt->nilai - $cMin) / ($cMax - $cMin) : 0;
+        }
+
+        $skorTerbobot = [];
+        foreach ($utility as $koperasiId => $subKriteria) {
+            foreach ($subKriteria as $subKriteriaId => $nilaiUtility) {
+                $bobotSub = SubKriteria::find($subKriteriaId)->bobot;
+                $skorTerbobot[$koperasiId][$subKriteriaId] = $nilaiUtility * $bobotSub;
+            }
+        }
+
+        $totalSkorPerKriteria = [];
         foreach ($koperasis as $koperasi) {
-            foreach ($subKriterias as $subKriteria) {
-                $nilai = Alternatif::where('koperasi_id', $koperasi->id)
-                    ->where('sub_kriteria_id', $subKriteria->id)
-                    ->first()
-                    ->nilai ?? 0;
-
-                $kriteriaId = $subKriteria->kriteria_id;
-
-                if ($subKriteria->jenis == 'benefit') {
-                    $max = Alternatif::where('sub_kriteria_id', $subKriteria->id)->max('nilai');
-                    $normalisasi[$koperasi->id][$subKriteria->id] = $max ? ($nilai / $max) : 0;
-                } else {
-                    $min = Alternatif::where('sub_kriteria_id', $subKriteria->id)->min('nilai');
-                    $normalisasi[$koperasi->id][$subKriteria->id] = $min ? ($min / $nilai) : 0;
+            foreach ($kriterias as $kriteria) {
+                $totalSkorPerKriteria[$koperasi->id][$kriteria->id] = 0;
+                foreach ($kriteria->subKriteria as $sub) {
+                    $totalSkorPerKriteria[$koperasi->id][$kriteria->id] += $skorTerbobot[$koperasi->id][$sub->id] ?? 0;
                 }
             }
         }
 
-        $nilaiUtility = [];
+        $nilaiAkhirTotal = [];
         foreach ($koperasis as $koperasi) {
-            $total = 0;
-            foreach ($subKriterias as $subKriteria) {
-                $total += $normalisasi[$koperasi->id][$subKriteria->id] * $subKriteria->bobot;
+            $nilaiAkhirTotal[$koperasi->id] = 0;
+            foreach ($kriterias as $kriteria) {
+                $nilaiAkhirTotal[$koperasi->id] += $totalSkorPerKriteria[$koperasi->id][$kriteria->id] * $kriteria->bobot;
             }
-            $nilaiUtility[] = [
-                'koperasi' => $koperasi->nama,
-                'skor' => $total,
-            ];
         }
 
-        usort($nilaiUtility, function ($a, $b) {
-            return $b['skor'] <=> $a['skor'];
-        });
+        return compact('koperasis', 'kriterias', 'utility', 'skorTerbobot', 'totalSkorPerKriteria', 'nilaiAkhirTotal');
+    }
 
-        return view('penilaian.hasil', compact('koperasis', 'kriterias', 'normalisasi', 'nilaiUtility'));
+    public function reset()
+    {
+        Alternatif::truncate();
+
+        return redirect()->route('penilaian.index')->with('success', 'Perhitungan berhasil direset.');
+    }
+
+
+    public function perhitungan()
+    {
+        $cekPenilaian = Alternatif::count();
+
+        if ($cekPenilaian == 0) {
+            return redirect()->route('penilaian.index')->with('error', 'Silakan isi penilaian terlebih dahulu.');
+        }
+
+        return view('penilaian.perhitungan', $this->hitungPerhitungan());
+    }
+
+    public function hasil()
+    {
+        $cekPenilaian = Alternatif::count();
+
+        if ($cekPenilaian == 0) {
+            return redirect()->route('penilaian.index')->with('error', 'Silakan isi penilaian terlebih dahulu.');
+        }
+        
+        $data = $this->hitungPerhitungan();
+        $peringkatKoperasi = collect($data['nilaiAkhirTotal'])->map(fn($nilai, $id) => (object) ['id' => $id, 'kode' => Koperasi::find($id)->kode, 'nilai_akhir' => $nilai])->sortByDesc('nilai_akhir')->values()->all();
+
+        return view('penilaian.hasil', compact('peringkatKoperasi'));
+    }
+    public function simpanHasil(Request $request)
+    {
+        $dataPerhitungan = json_decode($request->input('data_perhitungan'));
+
+        if (!$dataPerhitungan) {
+            return redirect()->back()->with('error', 'Data perhitungan tidak valid.');
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($dataPerhitungan as $index => $koperasi) {
+                RiwayatPerhitungan::create([
+                    'kode_koperasi' => $koperasi->kode,
+                    'nilai_akhir' => $koperasi->nilai_akhir,
+                    'peringkat' => $index + 1
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('riwayat')->with('success', 'Hasil perhitungan berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('riwayat')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+    public function riwayat()
+    {
+        $riwayat = RiwayatPerhitungan::select('peringkat', 'kode_koperasi', 'nilai_akhir', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy(fn($item) => $item->created_at->format('d-m-Y'));
+
+        return view('riwayat-perhitungan', compact('riwayat'));
     }
 }

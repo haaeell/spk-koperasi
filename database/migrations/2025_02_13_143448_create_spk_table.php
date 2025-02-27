@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('koperasi', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('kode');
             $table->string('alamat');
             $table->timestamps();
         });
@@ -18,6 +19,7 @@ return new class extends Migration
         Schema::create('kriteria', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('kode');
             $table->decimal('bobot', 5, 2);
             $table->enum('jenis', ['benefit', 'cost']);
             $table->timestamps();
@@ -27,6 +29,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kriteria_id')->constrained('kriteria')->onDelete('cascade');
             $table->string('nama');
+            $table->string('kode');
             $table->decimal('bobot', 5, 2);
             $table->timestamps();
         });

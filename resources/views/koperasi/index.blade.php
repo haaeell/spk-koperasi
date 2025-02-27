@@ -18,16 +18,16 @@
             <table class="table table-hover table-row-bordered table-row-gray-100 align-middle gs-7 gy-5" id="datatable">
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800 bg-light-dark">
-                        <th>No</th>
+                        <th>Kode</th>
                         <th>Nama</th>
                         <th>Alamat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($koperasis as $key => $koperasi)
+                    @foreach ($koperasis as $koperasi)
                         <tr>
-                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $koperasi->kode }}</td>
                             <td>{{ $koperasi->nama }}</td>
                             <td>{{ $koperasi->alamat }}</td>
                             <td>

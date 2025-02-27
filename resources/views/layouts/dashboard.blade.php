@@ -202,7 +202,7 @@
 									</a>
 								</div>
 								<div class="menu-item menu-accordion">
-									<a href="/penilaian" class="menu-link {{ request()->routeIs('penilaian.*') ? 'active' : '' }}">
+									<a href="/penilaian" class="menu-link {{ request()->is('penilaian') ? 'active' : '' }}">
 										<span class="menu-icon">
 											<i class="ki-duotone ki-check-square  fs-1">
 												<span class="path1"></span>
@@ -213,7 +213,7 @@
 									</a>
 								</div>
 								<div class="menu-item menu-accordion">
-									<a href="/perhitungan" class="menu-link {{ request()->routeIs('perhitungan.*') ? 'active' : '' }}">
+									<a href="/perhitungan" class="menu-link {{ request()->is('perhitungan') ? 'active' : '' }}">
 										<span class="menu-icon">
 											<i class="ki-duotone ki-calculator fs-1">
 												<span class="path1"></span>
@@ -224,7 +224,7 @@
 									</a>
 								</div>
 								<div class="menu-item menu-accordion">
-									<a href="/hasil" class="menu-link" {{ request()->routeIs('hasil.*') ? 'active' : '' }}>
+									<a href="/hasil" class="menu-link" {{ request()->is('hasil') ? 'active' : '' }}>
 										<span class="menu-icon">
 											<i class="ki-duotone ki-chart fs-1">
 												<span class="path1"></span>

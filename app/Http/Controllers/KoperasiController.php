@@ -9,7 +9,7 @@ class KoperasiController extends Controller
 {
     public function index()
     {
-        $koperasis = Koperasi::orderBy('nama', 'asc')->get();
+        $koperasis = Koperasi::orderBy('kode', 'asc')->get();
         return view('koperasi.index', compact('koperasis'));
     }
 

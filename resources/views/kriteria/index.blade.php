@@ -18,9 +18,10 @@
             <table class="table table-hover table-row-bordered table-row-gray-100 align-middle gs-7 gy-5" id="datatable">
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800 bg-light-dark">
-                        <th>No</th>
+                        <th>Kode</th>
                         <th>Nama</th>
                         <th>Bobot</th>
+                        <th>Bobot Normalisasi</th>
                         <th>Jenis</th>
                         <th>Aksi</th>
                     </tr>
@@ -28,9 +29,10 @@
                 <tbody>
                     @foreach ($kriterias as $kriteria)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $kriteria->kode }}</td>
                             <td>{{ $kriteria->nama }}</td>
-                            <td>{{ $kriteria->bobot }}</td>
+                            <td>{{ $kriteria->bobot * 100 }}</td>
+                            <td>{{ $kriteria->bobot}}</td>
                             <td>{{ $kriteria->jenis }}</td>
                             <td>
                                 <a href="{{ route('kriteria.edit', $kriteria->id) }}"

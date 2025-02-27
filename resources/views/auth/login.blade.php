@@ -33,8 +33,8 @@
                             </div>
                             <div class="fv-row mb-10">
                                 <label class="form-label fs-6 fw-bold text-dark">Email</label>
-                                <input class="form-control form-control-lg form-control-solid  @error('password') is-invalid @enderror" type="email"
-                                    name="email" required />
+                                <input class="form-control form-control-lg   @error('email') is-invalid @enderror""
+                                    type="email" name="email" required />
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -46,8 +46,8 @@
                                 <div class="d-flex flex-stack mb-2">
                                     <label class="form-label fw-bold text-dark fs-6 mb-0">Password</label>
                                 </div>
-                                <input class="form-control form-control-lg form-control-solid  @error('password') is-invalid @enderror" type="password"
-                                    name="password" required />
+                                <input class="form-control form-control-lg  @error('password') is-invalid @enderror"
+                                    type="password" name="password" required />
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -90,30 +90,18 @@
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        @if (session('success') || session('error'))
+        @if ($errors->any())
             <script>
                 $(document).ready(function() {
-                    var successMessage = "{{ session('success') }}";
-                    var errorMessage = "{{ session('error') }}";
-
-                    if (successMessage) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: successMessage,
-                        });
-                    }
-
-                    if (errorMessage) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: errorMessage,
-                        });
-                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: `{!! implode('<br>', $errors->all()) !!}`
+                    });
                 });
             </script>
         @endif
+
 </body>
 
 </html>

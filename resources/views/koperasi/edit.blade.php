@@ -8,6 +8,10 @@
                 @csrf
                 @method('PUT')
                 <div class="mb-5">
+                    <label>kOde</label>
+                    <input type="text" name="kode" value="{{ $koperasi->kode }}" class="form-control" required>
+                </div>
+                <div class="mb-5">
                     <label>Nama Koperasi</label>
                     <input type="text" name="nama" value="{{ $koperasi->nama }}" class="form-control" required>
                 </div>

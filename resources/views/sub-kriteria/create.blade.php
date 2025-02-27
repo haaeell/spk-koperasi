@@ -19,6 +19,10 @@
                     <input type="text" name="nama" class="form-control" required>
                 </div>
                 <div class="mb-5">
+                    <label>Kode</label>
+                    <input type="text" name="kode" class="form-control" required>
+                </div>
+                <div class="mb-5">
                     <label>Bobot</label>
                     <input type="number" step="0.01" name="bobot" class="form-control" required>
                 </div>

@@ -12,7 +12,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\SubKriteriaController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -27,5 +27,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('hasil', [HasilController::class, 'index'])->name('hasil.index');
     Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
-    Route::get('/penilaian/proses', [PenilaianController::class, 'proses'])->name('penilaian.proses');
+    Route::delete('/penilaian/reset', [PenilaianController::class, 'reset'])->name('penilaian.reset');
+
+    Route::get('/perhitungan', [PenilaianController::class, 'perhitungan'])->name('penilaian.perhitungan');
+    Route::get('/hasil', [PenilaianController::class, 'hasil'])->name('penilaian.hasil');
+    Route::post('/simpan-hasil', [PenilaianController::class, 'simpanHasil'])->name('simpan-hasil');
+    Route::get('/riwayat', [PenilaianController::class, 'riwayat'])->name('riwayat');
 });

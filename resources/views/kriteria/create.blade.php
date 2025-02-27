@@ -7,6 +7,10 @@
             <form action="{{ route('kriteria.store') }}" method="POST">
                 @csrf
                 <div class="mb-5">
+                    <label>Kode</label>
+                    <input type="text" name="kode" class="form-control" required>
+                </div>
+                <div class="mb-5">
                     <label>Nama Kriteria</label>
                     <input type="text" name="nama" class="form-control" required>
                 </div>

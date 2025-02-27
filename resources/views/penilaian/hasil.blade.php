@@ -1,81 +1,110 @@
 @extends('layouts.app')
+@section('title', 'Peringkat Koperasi')
 
-@section('title', 'Hasil Penilaian Koperasi')
-@section('breadcrumb', 'Hasil Penilaian')
 @section('content')
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-4">Normalisasi Skor per Sub-Kriteria</h5>
-                   <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center" rowspan="2">Koperasi</th>
-                                @foreach ($kriterias as $kriteria)
-                                    <th class="text-center text-nowrap" colspan="{{ $kriteria->subKriteria->count() }}">{{ $kriteria->nama }}</th>
-                                @endforeach
-                                <th class="text-center text-nowrap" rowspan="2">Total Skor</th>
-                            </tr>
-                            <tr>
-                                @foreach ($kriterias as $kriteria)
-                                    @foreach ($kriteria->subKriteria as $subKriteria)
-                                        <th class="text-center text-nowrap">{{ $subKriteria->nama }}</th>
-                                    @endforeach
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($koperasis as $koperasi)
-                                <tr>
-                                    <td class="text-nowrap">{{ $koperasi->nama }}</td>
-                                    @foreach ($kriterias as $kriteria)
-                                        @foreach ($kriteria->subKriteria as $subKriteria)
-                                            <td class="text-center text-nowrap">
-                                                {{ isset($normalisasi[$koperasi->id][$subKriteria->id]) ? number_format($normalisasi[$koperasi->id][$subKriteria->id], 2) : 0 }}
-                                            </td>
-                                        @endforeach
-                                    @endforeach
-                                    <td class="text-center text-nowrap">
-                                        {{ isset($nilaiUtility[$koperasi->id]) ? number_format($nilaiUtility[$koperasi->id]['skor'], 2) : 0 }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                   </div>
-                </div>
-            </div>
-
-            <!-- Ranking Koperasi Based on Total Skor -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-4">Ranking Koperasi Berdasarkan Skor</h5>
-                    <table class="table table-bordered table-hover" id="datatable">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">Ranking</th>
-                                <th class="text-center">Koperasi</th>
-                                <th class="text-center">Skor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($nilaiUtility as $index => $data)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td>{{ $data['koperasi'] }}</td>
-                                    <td class="text-center">{{ number_format($data['skor'], 2) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <h4 class="mt-4">Peringkat Koperasi</h4>
+    <div class="table-responsive">
+        <table id="peringkatTable" class="table table-bordered text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Peringkat</th>
+                    <th>Koperasi</th>
+                    <th>Nilai Akhir</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $peringkat = 1; @endphp
+                @foreach ($peringkatKoperasi as $koperasi)
+                    <tr class="{{ $peringkat == 1 ? 'table-success fw-bold' : '' }}">
+                        <td>{{ $peringkat }}</td>
+                        <td class="text-nowrap">{{ $koperasi->kode }}</td>
+                        <td>{{ number_format($koperasi->nilai_akhir, 4) }}</td>
+                        <td>
+                            @if ($peringkat == 1)
+                                <span class="badge bg-success">🏆 Koperasi Terbaik</span>
+                            @else
+                                <span class="badge bg-secondary">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @php $peringkat++; @endphp
+                @endforeach
+            </tbody>
+        </table>
+        <div class="text-end mt-4">
+            <form action="{{ route('simpan-hasil') }}" method="POST">
+                @csrf
+                <input type="hidden" name="data_perhitungan" value="{{ json_encode($peringkatKoperasi) }}">
+                <button type="submit" class="btn btn-primary mb-3">Simpan Perhitungan</button>
+            </form>
         </div>
+
     </div>
-</div>
 
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $("#peringkatTable").DataTable({
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom": "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-start'f>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'B>" +
+                    ">" +
+                    "<'table-responsive'tr>" +
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'l i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">",
+                "buttons": [{
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Export Excel',
+                        className: 'btn btn-success btn-sm',
+                        title: 'Data Peringkat Koperasi',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf"></i> Export PDF',
+                        className: 'btn btn-danger btn-sm',
+                        title: 'Data Peringkat Koperasi',
+                        orientation: 'portrait',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        },
+                        customize: function(doc) {
+                            doc.styles.tableHeader = {
+                                bold: true,
+                                fontSize: 12,
+                                color: 'white',
+                                fillColor: '#4a86e8', 
+                                alignment: 'center'
+                            };
+                            doc.content[1].table.widths = ['20%', '40%', '20%',
+                            '20%']; 
+                            doc.styles.title = {
+                                fontSize: 14,
+                                bold: true,
+                                alignment: 'center'
+                            };
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+@endpush

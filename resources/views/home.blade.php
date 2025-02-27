@@ -1,36 +1,52 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+    <div class="row">
+        <!-- Card Jumlah Koperasi -->
+        <div class="col-md-3">
             <div class="card shadow border-primary">
-                <div class="card-body">
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et?</p>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Koperasi</h5>
+                    <h3 class="text-primary">{{ $totalKoperasi }}</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow border-primary">
-                <div class="card-body">
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et?Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsum ea inventore delectus voluptatum
-                        quaerat incidunt, ut temporibus dolore vero et?</p>
+        <!-- Card Jumlah Kriteria -->
+        <div class="col-md-3">
+            <div class="card shadow border-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Kriteria</h5>
+                    <h3 class="text-success">{{ $totalKriteria }}</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Card Jumlah Sub-Kriteria -->
+        <div class="col-md-3">
+            <div class="card shadow border-warning">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Sub-Kriteria</h5>
+                    <h3 class="text-warning">{{ $totalSubKriteria }}</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Card Jumlah Penilaian -->
+        <div class="col-md-3">
+            <div class="card shadow border-danger">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Penilaian</h5>
+                    <h3 class="text-danger">{{ $totalPenilaian }}</h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-10">
-        <div class="col-md-12 mx-auto">
+    <!-- Grafik Peringkat Koperasi -->
+    <div class="row mt-4">
+        <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-body">
-                    <canvas id="myChart"></canvas>
+                    <h5 class="card-title text-center">Peringkat Koperasi Terakhir</h5>
+                    <canvas id="rankingChart"></canvas>
                 </div>
             </div>
         </div>
@@ -41,14 +57,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
+            var ctx = document.getElementById('rankingChart').getContext('2d');
+            var rankingChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'],
+                    labels: @json($koperasiNames),
                     datasets: [{
-                        label: 'Jumlah Pengguna',
-                        data: [12, 19, 3, 5, 8, 15],
+                        label: 'Skor Akhir',
+                        data: @json($koperasiScores),
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
