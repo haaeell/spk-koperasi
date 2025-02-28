@@ -59,14 +59,14 @@
 
         <div class="mt-3">
             <button type="submit" class="btn btn-primary float-end">Proses Penilaian</button>
-
-            <!-- Tombol Reset Perhitungan di Database -->
-            <form action="{{ route('penilaian.reset') }}" method="POST" class="d-inline" id="resetForm">
-                @csrf
-                @method('DELETE')
-                <button type="button" id="resetDatabaseBtn" class="btn btn-danger float-start">Reset Perhitungan</button>
-            </form>
         </div>
+    </form>
+     <!-- Tombol Reset Perhitungan di Database -->
+     <form action="{{ route('penilaian.reset') }}" method="POST" class="d-inline" id="resetForm">
+        @csrf
+        @method('DELETE')
+        <button type="button" id="resetDatabaseBtn" class="btn btn-danger float-start">Reset Perhitungan</button>
+    </form>
 @endsection
 
 @push('scripts')
