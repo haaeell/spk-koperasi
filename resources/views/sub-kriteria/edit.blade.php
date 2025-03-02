@@ -11,7 +11,7 @@
                     <label>Kriteria</label>
                     <select name="kriteria_id" id="kriteria_id" class="form-select form-control">
                        @foreach ($kriteria as $item)
-                           <option value="{{ $item->id }}" {{ $item->id == $subKriteria->id ? 'selected' : '' }}>{{ $item->nama }}"></option>
+                           <option value="{{ $item->id }}" {{ $item->id == $subKriteria->kriteria_id ? 'selected' : '' }}>{{ $item->nama }}</option>
                        @endforeach
                     </select>
                 </div>

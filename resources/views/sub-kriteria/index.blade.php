@@ -39,6 +39,7 @@
                         <table class="table table-hover table-row-bordered table-row-gray-100 align-middle gs-7 gy-5 datatable">
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800 bg-light-dark">
+                                    <th>No</th>
                                     <th>Nama Sub Kriteria</th>
                                     <th>Kode</th>
                                     <th>Bobot</th>
@@ -49,6 +50,7 @@
                             <tbody>
                                 @foreach ($subKriteriaGroup as $subKriteria)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $subKriteria->nama }}</td>
                                         <td>{{ $subKriteria->kode }}</td>
                                         <td>{{ number_format($subKriteria->bobot,0) }}</td>
@@ -63,6 +65,16 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                @php
+                                    $totalBobot = $subKriteriaGroup->sum('bobot');
+                                @endphp
+                                <tr class="bg-light-dark">
+                                    <td colspan="3" class="text-center fw-bold">Total Bobot</td>
+                                    <td class="fw-bold">{{ $totalBobot }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>

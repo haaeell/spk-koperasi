@@ -242,7 +242,7 @@
                             </div>
                             <div class="menu-item menu-accordion">
                                 <a href="/penilaian"
-                                    class="menu-link {{ request()->routeIs('penilaian.*') ? 'active' : '' }}">
+                                    class="menu-link {{ request()->routeIs('penilaian.index') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-check-square  fs-1">
                                             <span class="path1"></span>
@@ -254,7 +254,7 @@
                             </div>
                             <div class="menu-item menu-accordion">
                                 <a href="/perhitungan"
-                                    class="menu-link {{ request()->routeIs('perhitungan.*') ? 'active' : '' }}">
+                                    class="menu-link {{ request()->routeIs('penilaian.perhitungan') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-calculator fs-1">
                                             <span class="path1"></span>
@@ -266,7 +266,7 @@
                             </div>
                             <div class="menu-item menu-accordion">
                                 <a href="/hasil" class="menu-link"
-                                    {{ request()->routeIs('hasil.*') ? 'active' : '' }}>
+                                    {{ request()->is('penilaian.hasil') ? 'active' : '' }}>
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-chart fs-1">
                                             <span class="path1"></span>
@@ -278,7 +278,7 @@
                             </div>
                             <div class="menu-item menu-accordion">
                                 <a href="/riwayat"
-                                    class="menu-link {{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
+                                    class="menu-link {{ request()->routeIs('riwayat') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-element-5 fs-1">
                                             <span class="path1"></span>

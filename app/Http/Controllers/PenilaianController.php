@@ -9,12 +9,13 @@ use App\Models\Alternatif;
 use App\Models\RiwayatPerhitungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PenilaianController extends Controller
 {
     public function index()
     {
-        $koperasis = Koperasi::orderBy('nama', 'asc')->get();
+        $koperasis = Koperasi::orderBy('kode', 'asc')->get();
         $kriterias = Kriteria::with('subKriteria')->get();
         $nilaiAlternatif = Alternatif::all()->keyBy(fn($item) => $item->koperasi_id . '-' . $item->sub_kriteria_id);
 
@@ -42,7 +43,6 @@ class PenilaianController extends Controller
         $koperasis = Koperasi::all();
         $kriterias = Kriteria::with('subKriteria')->get();
         $alternatif = Alternatif::all();
-
         $cmin = [];
         $cmax = [];
         foreach ($kriterias as $kriteria) {
@@ -58,13 +58,19 @@ class PenilaianController extends Controller
             $cMin = $cmin[$alt->sub_kriteria_id];
             $cMax = $cmax[$alt->sub_kriteria_id];
             $utility[$alt->koperasi_id][$alt->sub_kriteria_id] = ($cMax - $cMin) != 0 ? ($alt->nilai - $cMin) / ($cMax - $cMin) : 0;
+
+            $sub = $kriterias->flatMap(function ($kriteria) {
+                return $kriteria->subKriteria;
+            })->where('id', $alt->sub_kriteria_id)->first();
         }
 
         $skorTerbobot = [];
         foreach ($utility as $koperasiId => $subKriteria) {
             foreach ($subKriteria as $subKriteriaId => $nilaiUtility) {
                 $bobotSub = SubKriteria::find($subKriteriaId)->bobot;
-                $skorTerbobot[$koperasiId][$subKriteriaId] = $nilaiUtility * $bobotSub;
+                $skorTerbobot[$koperasiId][$subKriteriaId] = $nilaiUtility * ($bobotSub / 100);
+
+                $sub = SubKriteria::find($subKriteriaId);
             }
         }
 
@@ -78,16 +84,25 @@ class PenilaianController extends Controller
             }
         }
 
+        $nilaiAkhirPerKriteria = [];
+        foreach ($koperasis as $koperasi) {
+            foreach ($kriterias as $kriteria) {
+                $nilaiAkhirPerKriteria[$koperasi->id][$kriteria->id] = 0;
+                $nilaiAkhirPerKriteria[$koperasi->id][$kriteria->id] = $totalSkorPerKriteria[$koperasi->id][$kriteria->id] * ($kriteria->bobot / 100);
+            }
+        }
+
         $nilaiAkhirTotal = [];
         foreach ($koperasis as $koperasi) {
             $nilaiAkhirTotal[$koperasi->id] = 0;
             foreach ($kriterias as $kriteria) {
-                $nilaiAkhirTotal[$koperasi->id] += $totalSkorPerKriteria[$koperasi->id][$kriteria->id] * $kriteria->bobot;
+                $nilaiAkhirTotal[$koperasi->id] += $totalSkorPerKriteria[$koperasi->id][$kriteria->id] * ($kriteria->bobot / 100);
             }
         }
-
-        return compact('koperasis', 'kriterias', 'utility', 'skorTerbobot', 'totalSkorPerKriteria', 'nilaiAkhirTotal');
+        
+        return compact('koperasis', 'kriterias', 'utility', 'skorTerbobot', 'totalSkorPerKriteria', 'nilaiAkhirPerKriteria', 'nilaiAkhirTotal');
     }
+
 
     public function reset()
     {
@@ -115,9 +130,14 @@ class PenilaianController extends Controller
         if ($cekPenilaian == 0) {
             return redirect()->route('penilaian.index')->with('error', 'Silakan isi penilaian terlebih dahulu.');
         }
-        
+
         $data = $this->hitungPerhitungan();
-        $peringkatKoperasi = collect($data['nilaiAkhirTotal'])->map(fn($nilai, $id) => (object) ['id' => $id, 'kode' => Koperasi::find($id)->kode, 'nilai_akhir' => $nilai])->sortByDesc('nilai_akhir')->values()->all();
+        $peringkatKoperasi = collect($data['nilaiAkhirTotal'])->map(fn($nilai, $id) => (object) [
+            'id' => $id,
+            'kode' => Koperasi::find($id)->kode,
+            'nilai_akhir' => $nilai,
+            'nama' => Koperasi::find($id)->nama
+        ])->sortByDesc('nilai_akhir')->values()->all();
 
         return view('penilaian.hasil', compact('peringkatKoperasi'));
     }

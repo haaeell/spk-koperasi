@@ -10,7 +10,7 @@ class SubKriteriaController extends Controller
 {
     public function index()
     {
-        $subKriterias = SubKriteria::orderBy('kode', 'asc')->get();
+        $subKriterias = SubKriteria::orderByRaw("CAST(SUBSTRING(kode, 2, LENGTH(kode)) AS UNSIGNED) ASC")->get();
         return view('sub-kriteria.index', compact('subKriterias'));
     }
 
@@ -39,15 +39,22 @@ class SubKriteriaController extends Controller
         return view('sub-kriteria.edit', compact('subKriteria', 'kriteria'));
     }
 
-    public function update(Request $request, Kriteria $kriteria)
+    public function update(Request $request, $id)
     {
+        $kriteria = SubKriteria::findOrFail($id);
         $request->validate([
             'nama' => 'required|string|max:255',
             'bobot' => 'required',
             'kriteria_id' => 'required',
+            'kode' => 'required',
         ]);
 
-        $kriteria->update($request->all());
+        $kriteria->nama = $request->nama;
+        $kriteria->bobot = $request->bobot;
+        $kriteria->kriteria_id = $request->kriteria_id;
+        $kriteria->kode = $request->kode;
+        $kriteria->save();
+
         return redirect()->route('sub-kriteria.index')->with('success', 'Sub Kriteria berhasil diperbarui.');
     }
 

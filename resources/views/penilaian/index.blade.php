@@ -41,7 +41,7 @@
                                                     <td>
                                                         <input type="number" step="0.01"
                                                             name="nilai[{{ $koperasi->id }}][{{ $subKriteria->id }}]"
-                                                            class="form-control nilai-input"
+                                                            class="form-control nilai-input w-75px"
                                                             value="{{ $nilaiSebelumnya ? number_format($nilaiSebelumnya, 0) : 0 }}"
                                                             required>
                                                     </td>
@@ -58,10 +58,9 @@
         </div>
 
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary float-end">Proses Penilaian</button>
+            <button type="submit" class="btn btn-primary float-end">Simpan Penilaian</button>
         </div>
     </form>
-     <!-- Tombol Reset Perhitungan di Database -->
      <form action="{{ route('penilaian.reset') }}" method="POST" class="d-inline" id="resetForm">
         @csrf
         @method('DELETE')

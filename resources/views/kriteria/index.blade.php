@@ -31,8 +31,8 @@
                         <tr>
                             <td>{{ $kriteria->kode }}</td>
                             <td>{{ $kriteria->nama }}</td>
-                            <td>{{ $kriteria->bobot * 100 }}</td>
-                            <td>{{ $kriteria->bobot}}</td>
+                            <td>{{ number_format($kriteria->bobot) }}</td>
+                            <td>{{ $kriteria->bobot / 100 }}0</td>
                             <td>{{ $kriteria->jenis }}</td>
                             <td>
                                 <a href="{{ route('kriteria.edit', $kriteria->id) }}"

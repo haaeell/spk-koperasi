@@ -36,15 +36,23 @@ class KriteriaController extends Controller
         return view('kriteria.edit', compact('kriteria'));
     }
 
-    public function update(Request $request, Kriteria $kriteria)
+    public function update(Request $request, $id)
     {
+        $kriteria = Kriteria::findOrFail($id);
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'bobot' => 'required',
             'jenis' => 'required',
+            'kode' => 'required',
         ]);
 
-        $kriteria->update($request->all());
+        $kriteria->nama = $request->nama;
+        $kriteria->bobot = $request->bobot;
+        $kriteria->jenis = $request->jenis;
+        $kriteria->kode = $request->kode;
+        $kriteria->save();
+        
         return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diperbarui.');
     }
 

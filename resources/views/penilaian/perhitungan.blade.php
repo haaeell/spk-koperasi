@@ -9,7 +9,7 @@
             <table class="table table-bordered text-center">
                 <thead class="table-primary">
                     <tr>
-                        <th rowspan="2">Koperasi</th>
+                        <th rowspan="2" class="align-middle">Koperasi</th>
                         @foreach ($kriterias as $kriteria)
                             <th colspan="{{ count($kriteria->subKriteria) }}">{{ $kriteria->nama }}</th>
                         @endforeach
@@ -28,7 +28,7 @@
                             <td class="text-nowrap">{{ $koperasi->kode }}</td>
                             @foreach ($kriterias as $kriteria)
                                 @foreach ($kriteria->subKriteria as $sub)
-                                    <td>{{ number_format($utility[$koperasi->id][$sub->id] ?? 0, 4) }}</td>
+                                    <td>{{ number_format($utility[$koperasi->id][$sub->id] ?? 0, 2) }}</td>
                                 @endforeach
                             @endforeach
                         </tr>
@@ -37,7 +37,42 @@
             </table>
         </div>
 
-        {{-- 2. Tabel Total Skor Terbobot per Kriteria --}}
+
+        {{-- 2. Tabel Skor Terbobot per Sub-Kriteria --}}
+        <h4 class="mt-4">Skor Terbobot per Sub-Kriteria</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-info">
+                    <tr>
+                        <th rowspan="2" class="align-middle">Koperasi</th>
+                        @foreach ($kriterias as $kriteria)
+                            <th colspan="{{ count($kriteria->subKriteria) }}">{{ $kriteria->nama }}</th>
+                        @endforeach
+                    </tr>
+                    <tr>
+                        @foreach ($kriterias as $kriteria)
+                            @foreach ($kriteria->subKriteria as $sub)
+                                <th>{{ $sub->kode }}</th>
+                            @endforeach
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($koperasis as $koperasi)
+                        <tr>
+                            <td class="text-nowrap">{{ $koperasi->kode }}</td>
+                            @foreach ($kriterias as $kriteria)
+                                @foreach ($kriteria->subKriteria as $sub)
+                                    <td>{{ number_format($skorTerbobot[$koperasi->id][$sub->id] ?? 0, 4) }}</td>
+                                @endforeach
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        {{-- 3. Tabel Total Skor Terbobot per Kriteria --}}
         <h4 class="mt-4">Total Skor Terbobot per Kriteria</h4>
         <table class="table table-bordered text-center">
             <thead class="table-warning">
@@ -59,17 +94,16 @@
                 @endforeach
             </tbody>
         </table>
-
-        {{-- 3. Tabel Nilai Akhir per Kriteria & Total --}}
+        {{-- 4. Tabel Nilai Akhir per Kriteria & Total --}}
         <h4 class="mt-4">Nilai Akhir per Kriteria & Total</h4>
         <table class="table table-bordered text-center">
             <thead class="table-success">
                 <tr>
-                    <th rowspan="2">Koperasi</th>
+                    <th rowspan="2" class="align-middle">Koperasi</th>
                     @foreach ($kriterias as $kriteria)
                         <th class="text-nowrap">{{ $kriteria->nama }}</th>
                     @endforeach
-                    <th rowspan="2">Total</th>
+                    <th rowspan="2" class="align-middle">Total</th>
                 </tr>
             </thead>
             <tbody>
