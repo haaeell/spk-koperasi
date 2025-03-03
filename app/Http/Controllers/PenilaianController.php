@@ -16,7 +16,7 @@ class PenilaianController extends Controller
     public function index()
     {
         $koperasis = Koperasi::orderBy('kode', 'asc')->get();
-        $kriterias = Kriteria::with('subKriteria')->get();
+        $kriterias = Kriteria::with('subKriteria')->orderByRaw("CAST(SUBSTRING(kode, 2, LENGTH(kode)) AS UNSIGNED) ASC")->get();
         $nilaiAlternatif = Alternatif::all()->keyBy(fn($item) => $item->koperasi_id . '-' . $item->sub_kriteria_id);
 
         return view('penilaian.index', compact('koperasis', 'kriterias', 'nilaiAlternatif'));

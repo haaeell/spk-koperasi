@@ -9,7 +9,7 @@ class KriteriaController extends Controller
 {
     public function index()
     {
-        $kriterias = Kriteria::orderBy('kode', 'asc')->get();
+        $kriterias = Kriteria::orderByRaw("CAST(SUBSTRING(kode, 2, LENGTH(kode)) AS UNSIGNED) ASC")->get();
         return view('kriteria.index', compact('kriterias'));
     }
 

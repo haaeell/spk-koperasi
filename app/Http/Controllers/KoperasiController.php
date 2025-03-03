@@ -9,7 +9,7 @@ class KoperasiController extends Controller
 {
     public function index()
     {
-        $koperasis = Koperasi::orderBy('kode', 'asc')->get();
+        $koperasis = Koperasi::orderByRaw("CAST(SUBSTRING(kode, 2, LENGTH(kode)) AS UNSIGNED) ASC")->get();
         return view('koperasi.index', compact('koperasis'));
     }
 
