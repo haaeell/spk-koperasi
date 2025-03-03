@@ -265,8 +265,7 @@
                                 </a>
                             </div>
                             <div class="menu-item menu-accordion">
-                                <a href="/hasil" class="menu-link"
-                                    {{ request()->is('penilaian.hasil') ? 'active' : '' }}>
+                                <a href="/hasil" class="menu-link {{ request()->routeIs('penilaian.hasil') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-chart fs-1">
                                             <span class="path1"></span>
