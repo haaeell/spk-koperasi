@@ -35,14 +35,16 @@
                             <td>{{ $kriteria->bobot / 100 }}0</td>
                             <td>{{ $kriteria->jenis }}</td>
                             <td>
-                                <a href="{{ route('kriteria.edit', $kriteria->id) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Hapus kriteria?')">Hapus</button>
-                                </form>
+                                @if (!Auth::user()->isOwner())
+                                    <a href="{{ route('kriteria.edit', $kriteria->id) }}"
+                                        class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Hapus kriteria?')">Hapus</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

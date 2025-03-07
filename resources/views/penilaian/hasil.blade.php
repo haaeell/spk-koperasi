@@ -34,11 +34,13 @@
             </tbody>
         </table>
         <div class="text-end mt-4">
-            <form action="{{ route('simpan-hasil') }}" method="POST">
-                @csrf
-                <input type="hidden" name="data_perhitungan" value="{{ json_encode($peringkatKoperasi) }}">
-                <button type="submit" class="btn btn-primary mb-3">Simpan Perhitungan</button>
-            </form>
+            @if (!Auth::user()->isOwner())
+                <form action="{{ route('simpan-hasil') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="data_perhitungan" value="{{ json_encode($peringkatKoperasi) }}">
+                    <button type="submit" class="btn btn-primary mb-3">Simpan Perhitungan</button>
+                </form>
+            @endif
         </div>
 
         <div class="mt-4">

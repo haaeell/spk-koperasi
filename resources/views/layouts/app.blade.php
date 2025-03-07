@@ -252,20 +252,23 @@
                                     <span class="menu-title">Penilaian</span>
                                 </a>
                             </div>
+                            @if (!Auth::user()->isOwner())
+                                <div class="menu-item menu-accordion">
+                                    <a href="/perhitungan"
+                                        class="menu-link {{ request()->routeIs('penilaian.perhitungan') ? 'active' : '' }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-calculator fs-1">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Perhitungan</span>
+                                    </a>
+                                </div>
+                            @endif
                             <div class="menu-item menu-accordion">
-                                <a href="/perhitungan"
-                                    class="menu-link {{ request()->routeIs('penilaian.perhitungan') ? 'active' : '' }}">
-                                    <span class="menu-icon">
-                                        <i class="ki-duotone ki-calculator fs-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </span>
-                                    <span class="menu-title">Perhitungan</span>
-                                </a>
-                            </div>
-                            <div class="menu-item menu-accordion">
-                                <a href="/hasil" class="menu-link {{ request()->routeIs('penilaian.hasil') ? 'active' : '' }}">
+                                <a href="/hasil"
+                                    class="menu-link {{ request()->routeIs('penilaian.hasil') ? 'active' : '' }}">
                                     <span class="menu-icon">
                                         <i class="ki-duotone ki-chart fs-1">
                                             <span class="path1"></span>

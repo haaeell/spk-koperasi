@@ -39,7 +39,7 @@
                                                         $nilaiSebelumnya = $nilaiAlternatif[$key]->nilai ?? '';
                                                     @endphp
                                                     <td>
-                                                        <input type="number" step="0.01"
+                                                        <input type="number" step="0.01" {{ Auth::user()->isOwner() ? 'readonly' : '' }}
                                                             name="nilai[{{ $koperasi->id }}][{{ $subKriteria->id }}]"
                                                             class="form-control nilai-input w-75px"
                                                             value="{{ $nilaiSebelumnya ? number_format($nilaiSebelumnya, 0) : 0 }}"

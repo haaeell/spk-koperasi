@@ -31,14 +31,18 @@
                             <td>{{ $koperasi->nama }}</td>
                             <td>{{ $koperasi->alamat }}</td>
                             <td>
-                                <a href="{{ route('koperasi.edit', $koperasi->id) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('koperasi.destroy', $koperasi->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Hapus Koperasi?')">Hapus</button>
-                                </form>
+                                @if (!Auth::user()->isOwner())
+                                    <a href="{{ route('koperasi.edit', $koperasi->id) }}"
+                                        class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('koperasi.destroy', $koperasi->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Hapus Koperasi?')">Hapus</button>
+                                    </form>
+                                @else
+                                    -
+                                @endif
                             </td>
                         </tr>
                     @endforeach
