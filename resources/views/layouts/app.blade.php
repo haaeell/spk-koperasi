@@ -46,11 +46,8 @@
                                 <span class="path2"></span>
                             </i>
                         </div>
-                        <a href="../dist/index.html" class="app-sidebar-logo">
-                            <img alt="Logo" src="{{ asset('assets') }}/media/logos/default.svg"
-                                class="h-30px theme-light-show" />
-                            <img alt="Logo" src="{{ asset('assets') }}/media/logos/default-dark.svg"
-                                class="h-30px theme-dark-show" />
+                        <a href="../dist/index.html" class="app-sidebar-logo fw-bold fs-1  text-dark">
+                           SPK KOPERASI
                         </a>
                         <div id="kt_app_sidebar_toggle"
                             class="app-sidebar-toggle btn btn-sm btn-icon btn-color-warning me-n2 d-none d-lg-flex"

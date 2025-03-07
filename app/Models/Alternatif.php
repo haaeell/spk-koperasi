@@ -9,7 +9,7 @@ class Alternatif extends Model
 {
     use HasFactory;
 
-    protected $table = 'alternatif';
+    protected $table = 'penilaian';
     protected $fillable = ['koperasi_id', 'sub_kriteria_id','kriteria_id', 'nilai'];
 
     public function koperasi()
