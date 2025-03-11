@@ -26,6 +26,14 @@ class KriteriaController extends Controller
             'jenis' => 'required',
         ]);
 
+        $totalBobotSaatIni = Kriteria::sum('bobot');
+        $bobotBaru = $request->bobot;
+
+        if (($totalBobotSaatIni + $bobotBaru) > 100) {
+            return redirect()->back()->withErrors(['bobot' => 'Total bobot tidak boleh lebih dari 100. Total bobot saat ini adalah ' . $totalBobotSaatIni])
+                ->withInput();
+        }
+
         Kriteria::create($request->all());
         return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil ditambahkan.');
     }
@@ -47,12 +55,20 @@ class KriteriaController extends Controller
             'kode' => 'required',
         ]);
 
+        $totalBobotSaatIni = Kriteria::where('id', '!=', $id)->sum('bobot');
+        $bobotBaru = $request->bobot;
+
+        if (($totalBobotSaatIni + $bobotBaru) > 100) {
+            return redirect()->back()->withErrors(['bobot' => 'Total bobot tidak boleh lebih dari 100. Total bobot saat ini adalah ' . $totalBobotSaatIni])
+                ->withInput();
+        }
+
         $kriteria->nama = $request->nama;
         $kriteria->bobot = $request->bobot;
         $kriteria->jenis = $request->jenis;
         $kriteria->kode = $request->kode;
         $kriteria->save();
-        
+
         return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diperbarui.');
     }
 
