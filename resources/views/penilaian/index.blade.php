@@ -25,14 +25,14 @@
                                         <tr class="bg-light-dark fw-bold">
                                             <th class="text-center">Koperasi</th>
                                             @foreach ($kriteria->subKriteria as $subKriteria)
-                                                <th class="text-center text-nowrap">{{ $subKriteria->kode }}</th>
+                                                <th class="text-center text-nowrap">{{ $subKriteria->nama }}  ({{ $subKriteria->kode }})</th>
                                             @endforeach
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($koperasis as $koperasi)
                                             <tr>
-                                                <td class="text-nowrap">{{ $koperasi->kode }}</td>
+                                                <td class="text-nowrap">{{ $koperasi->nama }} ({{ $koperasi->kode }})</td>
                                                 @foreach ($kriteria->subKriteria as $subKriteria)
                                                     @php
                                                         $key = $koperasi->id . '-' . $subKriteria->id;

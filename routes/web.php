@@ -23,9 +23,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('kriteria', KriteriaController::class);
     Route::resource('sub-kriteria', SubKriteriaController::class);
     Route::get('penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
-    Route::get('perhotungan', [PerhitunganController::class, 'index'])->name('perhitungan.index');
-    Route::get('hasil', [HasilController::class, 'index'])->name('hasil.index');
-    Route::get('riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::post('/penilaian/store', [PenilaianController::class, 'store'])->name('penilaian.store');
     Route::delete('/penilaian/reset', [PenilaianController::class, 'reset'])->name('penilaian.reset');
 
@@ -33,4 +30,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/hasil', [PenilaianController::class, 'hasil'])->name('penilaian.hasil');
     Route::post('/simpan-hasil', [PenilaianController::class, 'simpanHasil'])->name('simpan-hasil');
     Route::get('/riwayat', [PenilaianController::class, 'riwayat'])->name('riwayat');
+    Route::get('/download-template', [KoperasiController::class, 'downloadTemplate'])->name('downloadTemplate');
+    Route::post('/import', [KoperasiController::class, 'import'])->name('import');
 });

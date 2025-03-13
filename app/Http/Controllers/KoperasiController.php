@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KoperasiTemplateExport;
+use App\Imports\KoperasiImport;
 use App\Models\Koperasi;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class KoperasiController extends Controller
 {
@@ -49,5 +53,27 @@ class KoperasiController extends Controller
     {
         $koperasi->delete();
         return redirect()->route('koperasi.index')->with('success', 'Koperasi berhasil dihapus.');
+    }
+
+    public function show($id)
+    {
+        //
+    }
+
+    public function downloadTemplate(Excel $excel): BinaryFileResponse
+    {
+        return $excel->download(new KoperasiTemplateExport, 'template_koperasi.xlsx');
+    }
+
+
+    public function import(Request $request, Excel $excel)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $excel->import(new KoperasiImport, $request->file('file'));
+
+        return redirect()->route('koperasi.index')->with('success', 'Data berhasil diimpor!');
     }
 }

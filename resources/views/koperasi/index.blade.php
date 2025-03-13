@@ -11,6 +11,15 @@
                     <a href="{{ route('koperasi.create') }}" class="btn btn-sm fw-bold btn-primary">Tambah
                         Koperasi</a>
                 </div>
+                <div>
+                    <a href="{{ route('downloadTemplate') }}" class="btn btn-sm btn-info">Download Template</a>
+                    <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data"
+                        class="d-inline">
+                        @csrf
+                        <input type="file" name="file" class="form-control form-control-sm d-inline w-auto" required>
+                        <button type="submit" class="btn btn-sm btn-success">Import Excel</button>
+                    </form>
+                </div>
             @endif
         </div>
         <div class="card-body pt-3">

@@ -17,7 +17,7 @@
                     <tr>
                         @foreach ($kriterias as $kriteria)
                             @foreach ($kriteria->subKriteria as $sub)
-                                <th>{{ $sub->kode }}</th>
+                                <th>{{ $sub->nama }}{{ $sub->kode }}</th>
                             @endforeach
                         @endforeach
                     </tr>
