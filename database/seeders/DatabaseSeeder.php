@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             KoperasiSeeder::class,
             KriteriaSeeder::class,
             SubKriteriaSeeder::class,
-            // AlternatifSeeder::class,
+            AlternatifSeeder::class,
             UserSeeder::class,
         ]);
     }

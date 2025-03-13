@@ -38,7 +38,7 @@ class PenilaianController extends Controller
         return redirect()->route('penilaian.index')->with('success', 'Data penilaian berhasil disimpan.');
     }
 
-    private function hitungPerhitungan()
+    public function hitungPerhitungan()
     {
         $koperasis = Koperasi::all();
         $kriterias = Kriteria::with('subKriteria')->get();
